@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">BTG - Mobile Challange</string>
+    <string name="app_name">BTG - Mobile Challenge</string>
+    <string name="label_i_want_to_convert">Eu quero converter:</string>
+    <string name="label_to">Para:</string>
 </resources>
