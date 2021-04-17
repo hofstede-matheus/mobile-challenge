@@ -1,21 +1,20 @@
-package com.hofstedematheus.btg_mobilechallange
+package com.hofstedematheus.btg_mobilechallange.scenes.currencyconverter
 
 import android.os.Bundle
-import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.AppCompatActivity
-import com.hofstedematheus.btg_mobilechallange.databinding.ActivityMainBinding
+import com.hofstedematheus.btg_mobilechallange.R
+import com.hofstedematheus.btg_mobilechallange.databinding.ActivityCurrencyConverterBinding
 import com.hofstedematheus.btg_mobilechallange.mock.currencies
 
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+class CurrencyConverterActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityCurrencyConverterBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityCurrencyConverterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
