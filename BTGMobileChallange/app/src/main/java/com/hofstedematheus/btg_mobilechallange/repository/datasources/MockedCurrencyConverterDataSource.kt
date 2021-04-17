@@ -14,7 +14,7 @@ class MockedCurrencyConverterDataSource: CurrencyConverterRepository {
         return service.getCurrencies()
     }
 
-    override suspend fun convertCurrency(dolarValue: Float): Float {
-        return service.convertCurrency(dolarValue)
+    override suspend fun convertCurrency(fromCurrency: String, fromCurrencyValue: Float, toCurrency: String): Float {
+        return service.convertCurrency(fromCurrencyValue)
     }
 }

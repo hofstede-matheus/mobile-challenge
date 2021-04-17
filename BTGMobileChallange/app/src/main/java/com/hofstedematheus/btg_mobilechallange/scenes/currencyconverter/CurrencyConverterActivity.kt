@@ -2,14 +2,11 @@ package com.hofstedematheus.btg_mobilechallange.scenes.currencyconverter
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import com.hofstedematheus.btg_mobilechallange.R
 import com.hofstedematheus.btg_mobilechallange.databinding.ActivityCurrencyConverterBinding
-import com.hofstedematheus.btg_mobilechallange.mock.currencies
-import com.hofstedematheus.btg_mobilechallange.util.Status
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 
 class CurrencyConverterActivity : AppCompatActivity() {
@@ -27,40 +24,61 @@ class CurrencyConverterActivity : AppCompatActivity() {
         setupViewModel()
 
         initUI()
+        viewModel.getCurrencies()
     }
 
     private fun initUI() {
         currenciesAdapter = ArrayAdapter(
             this,
             R.layout.support_simple_spinner_dropdown_item,
-            viewModel.state.value?.data?.currencies?.map { "${it.code} - ${it.name}" } ?: listOf()
+            viewModel.currenciesStateLiveData.value?.currencies?.map { "${it.code} - ${it.name}" } ?: listOf()
         )
         binding.fromCurrencyEditText.setAdapter(currenciesAdapter)
         binding.toCurrencyEditText.setAdapter(currenciesAdapter)
+
+        binding.fromCurrencyValueEditText.setText(viewModel.conversionStateLiveData.value?.currencyFromValue.toString())
     }
 
     private fun setupViewModel() {
         viewModel.apply {
-            state.observe(
+            currenciesStateLiveData.observe(
                 this@CurrencyConverterActivity,
-                { state ->
-                    when (state.status) {
-                        Status.ERROR -> {
-                            Toast.makeText(this@CurrencyConverterActivity, "Erro", Toast.LENGTH_SHORT).show()
-                        }
-                        Status.SUCCESS -> {
-                            Toast.makeText(this@CurrencyConverterActivity, state.data?.currencies.toString(), Toast.LENGTH_SHORT).show()
-                        }
-                        Status.LOADING -> {
-                            Toast.makeText(this@CurrencyConverterActivity, "Loading", Toast.LENGTH_SHORT).show()
-                        }
-                    }
+                { currenciesState ->
+                    currenciesAdapter = ArrayAdapter(
+                        this@CurrencyConverterActivity,
+                        R.layout.support_simple_spinner_dropdown_item,
+                        currenciesState.currencies.map { "${it.code} - ${it.name}" }
+                    )
+                    binding.fromCurrencyEditText.setAdapter(currenciesAdapter)
+                    binding.toCurrencyEditText.setAdapter(currenciesAdapter)
+                }
+            )
+            conversionStateLiveData.observe(
+                this@CurrencyConverterActivity,
+                { conversionState ->
+                    binding.convertedValueTextView.text = conversionState.currencyConverted.toString()
                 }
             )
         }
     }
 
     private fun setupListeners() {
-
+        binding.fromCurrencyEditText.setOnItemClickListener { _, _, position, _ ->
+            viewModel.currenciesStateLiveData.value?.let {
+                viewModel.updateFromCurrency(it.currencies[position])
+                viewModel.convertCurrency()
+            }
+        }
+        binding.toCurrencyEditText.setOnItemClickListener { _, _, position, _ ->
+            viewModel.currenciesStateLiveData.value?.let {
+                viewModel.updateToCurrency(it.currencies[position])
+                viewModel.convertCurrency()
+            }
+        }
+        binding.fromCurrencyValueEditText.addTextChangedListener {
+            val fromCurrencyValue = if (it.toString().isNotEmpty()) it.toString().toFloat() else 0F
+            viewModel.updateFromCurrencyValue(fromCurrencyValue)
+            viewModel.convertCurrency()
+        }
     }
 }
