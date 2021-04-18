@@ -1,20 +1,26 @@
 package com.hofstedematheus.btg_mobilechallange.scenes.currencyconverter
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.hofstedematheus.btg_mobilechallange.R
+import com.hofstedematheus.btg_mobilechallange.constants.CACHE_LAST_UPDATED_ON
+import com.hofstedematheus.btg_mobilechallange.constants.CURRENCIES_CACHE
 import com.hofstedematheus.btg_mobilechallange.databinding.ActivityCurrencyConverterBinding
 import com.hofstedematheus.btg_mobilechallange.util.extensions.isVisibleIf
 import com.hofstedematheus.btg_mobilechallange.util.extensions.toMoneyString
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.java.KoinJavaComponent
+import org.koin.java.KoinJavaComponent.inject
 
 
 class CurrencyConverterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCurrencyConverterBinding
     private val viewModel: CurrencyConverterViewModel by viewModel()
+    private val preferences by inject(SharedPreferences::class.java)
     private lateinit var currenciesAdapter: ArrayAdapter<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +46,10 @@ class CurrencyConverterActivity : AppCompatActivity() {
         binding.toCurrencyEditText.setAdapter(currenciesAdapter)
 
         binding.fromCurrencyValueEditText.setText(viewModel.conversionStateLiveData.value?.currencyFromValue.toString())
+
+        if (preferences.contains(CACHE_LAST_UPDATED_ON)) binding.labelLastRefresh.text =
+            preferences.getString(CACHE_LAST_UPDATED_ON, "")
+
     }
 
     private fun setupViewModel() {
@@ -88,7 +98,9 @@ class CurrencyConverterActivity : AppCompatActivity() {
             viewModel.convertCurrency()
         }
         binding.refreshIconImageView.setOnClickListener {
-            viewModel.getCurrencies()
+            viewModel.getCurrencies(forceRefresh = true)
+            binding.labelLastRefresh.text =
+                preferences.getString(CACHE_LAST_UPDATED_ON, "")
         }
     }
 }

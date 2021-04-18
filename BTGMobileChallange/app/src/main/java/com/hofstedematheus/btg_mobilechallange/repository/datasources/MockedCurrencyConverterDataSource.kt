@@ -10,7 +10,7 @@ import org.koin.java.KoinJavaComponent.inject
 class MockedCurrencyConverterDataSource: CurrencyConverterRepository {
     private val service by inject(MockedApiService::class.java)
 
-    override suspend fun getCurrencies(): List<Currency> {
+    override suspend fun getCurrencies(forceRefresh: Boolean): List<Currency> {
         return service.getCurrencies()
     }
 

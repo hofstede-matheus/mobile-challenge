@@ -1,6 +1,7 @@
 package com.hofstedematheus.btg_mobilechallange.core
 
 import android.app.Application
+import com.hofstedematheus.btg_mobilechallange.di.androidModule
 import com.hofstedematheus.btg_mobilechallange.di.apiModule
 import com.hofstedematheus.btg_mobilechallange.di.currencyConverterModule
 import org.koin.android.ext.koin.androidContext
@@ -19,7 +20,8 @@ class CoreApplication: Application() {
             modules(
                 listOf(
                     currencyConverterModule,
-                    apiModule
+                    apiModule,
+                    androidModule
                 )
             )
         }

@@ -31,6 +31,7 @@ android {
     applicationVariants.all {
         buildConfigField("String", "API_KEY", "\"1efb34f689fe1c0ac74886fb16715494\"")
         buildConfigField("String", "API_URL", "\"http://api.currencylayer.com/\"")
+        buildConfigField("String", "PREFERENCES_NAME", "\"BTG_PREFS\"")
 
     }
 

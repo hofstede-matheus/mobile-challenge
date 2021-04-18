@@ -25,12 +25,12 @@ class CurrencyConverterViewModel: ViewModel() {
     val conversionStateLiveData: LiveData<ConversionState>
         get() = _conversionStateLiveData
 
-    fun getCurrencies() {
+    fun getCurrencies(forceRefresh: Boolean = false) {
         _currenciesStateLiveData.reduce { CurrenciesState(isLoading = true) }
 
         viewModelScope.launch {
             try {
-                val currencies = repository.getCurrencies()
+                val currencies = repository.getCurrencies(forceRefresh)
                 _currenciesStateLiveData.reduce { CurrenciesState(currencies = currencies) }
             } catch (exception: Exception) {
                 _currenciesStateLiveData.reduce { CurrenciesState(hasError = true, error = exception.message ?: "") }
