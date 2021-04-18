@@ -2,10 +2,12 @@ package com.hofstedematheus.btg_mobilechallange.scenes.currencyconverter
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.hofstedematheus.btg_mobilechallange.R
 import com.hofstedematheus.btg_mobilechallange.databinding.ActivityCurrencyConverterBinding
+import com.hofstedematheus.btg_mobilechallange.util.extensions.isVisibleIf
 import com.hofstedematheus.btg_mobilechallange.util.extensions.toMoneyString
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -52,6 +54,10 @@ class CurrencyConverterActivity : AppCompatActivity() {
                     )
                     binding.fromCurrencyEditText.setAdapter(currenciesAdapter)
                     binding.toCurrencyEditText.setAdapter(currenciesAdapter)
+
+                    binding.loadingProgress isVisibleIf currenciesState.isLoading
+
+                    if (currenciesState.hasError) Toast.makeText(this@CurrencyConverterActivity, currenciesState.error, Toast.LENGTH_SHORT).show()
                 }
             )
             conversionStateLiveData.observe(
@@ -80,6 +86,9 @@ class CurrencyConverterActivity : AppCompatActivity() {
             val fromCurrencyValue = if (it.toString().isNotEmpty()) it.toString().toFloat() else 0F
             viewModel.updateFromCurrencyValue(fromCurrencyValue)
             viewModel.convertCurrency()
+        }
+        binding.refreshIconImageView.setOnClickListener {
+            viewModel.getCurrencies()
         }
     }
 }
