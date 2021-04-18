@@ -1,4 +1,4 @@
-package com.hofstedematheus.btg_mobilechallange.services
+package com.hofstedematheus.btg_mobilechallange.services.mock
 
 import com.hofstedematheus.btg_mobilechallange.mock.currencies
 import com.hofstedematheus.btg_mobilechallange.model.Currency

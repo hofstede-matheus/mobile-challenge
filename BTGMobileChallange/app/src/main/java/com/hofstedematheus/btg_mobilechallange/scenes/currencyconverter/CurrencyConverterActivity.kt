@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.hofstedematheus.btg_mobilechallange.R
 import com.hofstedematheus.btg_mobilechallange.databinding.ActivityCurrencyConverterBinding
+import com.hofstedematheus.btg_mobilechallange.util.extensions.toMoneyString
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -56,7 +57,7 @@ class CurrencyConverterActivity : AppCompatActivity() {
             conversionStateLiveData.observe(
                 this@CurrencyConverterActivity,
                 { conversionState ->
-                    binding.convertedValueTextView.text = conversionState.currencyConverted.toString()
+                    binding.convertedValueTextView.text = conversionState.currencyConverted.toMoneyString()
                 }
             )
         }
