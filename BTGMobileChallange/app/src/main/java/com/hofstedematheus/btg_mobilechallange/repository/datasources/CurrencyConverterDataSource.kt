@@ -9,11 +9,13 @@ import com.hofstedematheus.btg_mobilechallange.model.Currency
 import com.hofstedematheus.btg_mobilechallange.repository.CurrencyConverterRepository
 import com.hofstedematheus.btg_mobilechallange.services.currencyapi.CurrencyApiService
 import com.hofstedematheus.btg_mobilechallange.services.currencyapi.dao.GetCurrenciesResponse
+import com.hofstedematheus.btg_mobilechallange.util.extensions.format
 import com.hofstedematheus.btg_mobilechallange.util.extensions.toErrorMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinApiExtension
 import org.koin.java.KoinJavaComponent.inject
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @KoinApiExtension
@@ -29,7 +31,7 @@ class CurrencyConverterDataSource : CurrencyConverterRepository {
                 response.body()?.let { getCurrenciesResponse ->
                     with(preferences.edit()) {
                         putString(CURRENCIES_CACHE, Gson().toJson(getCurrenciesResponse.currencies))
-                        putString(CACHE_LAST_UPDATED_ON, Date().toString())
+                        putString(CACHE_LAST_UPDATED_ON, Date().format())
                         apply()
                     }
                     return getCurrenciesResponse.currencies.map { Currency(it.key, it.value) }
